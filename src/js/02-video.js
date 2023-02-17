@@ -3,17 +3,21 @@ import throttle from 'lodash.throttle';
 
 const iframe = document.querySelector('iframe');
 const player = new Player(iframe);
+const KEY_STORAGE = 'videoplayer-current-time';
 
-player.on('play', function (data) {
-  localStorage.setItem('videoplayer-current-time', data.seconds);
-});
-let x = localStorage.getItem('videoplayer-current-time');
+player.on('timeupdate', throttle(onSavePlaybackTime, 1000));
 
-player.setCurrentTime(Number(x));
-// // ++++++++++++++++++++++++++++++++++++
+function onSavePlaybackTime(event) {
+  try {
+    localStorage.setItem(KEY_STORAGE, JSON.stringify(event.seconds));
+  } catch (error) {
+    console.log(error.message);
+  }
+}
 
-// const onPlay = function (data) {
-//   // data is an object containing properties specific to that event
-// };
-
-// player.on('play', onPlay);
+try {
+  const time = Number(localStorage.getItem(KEY_STORAGE));
+  player.setCurrentTime(time);
+} catch (error) {
+  console.log(error.message);
+}

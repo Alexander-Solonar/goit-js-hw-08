@@ -5,7 +5,6 @@ const userEmail = document.querySelector('input[name = email]');
 const textarea = document.querySelector('textarea[name = message]');
 
 const userData = {};
-getLocalData();
 
 userForm.addEventListener('input', throttle(onUserInputForm, 500));
 userForm.addEventListener('submit', onFormSubmit);
@@ -32,14 +31,18 @@ function onFormSubmit(evt) {
   console.log(userData);
 }
 
+getLocalData();
+
 function getLocalData() {
   try {
     const saveUserData = JSON.parse(
       localStorage.getItem('feedback-form-state')
     );
+    console.log(saveUserData.email);
     if (saveUserData.email) {
       userEmail.value = saveUserData.email;
     }
+    console.log(saveUserData.message);
     if (saveUserData.message) {
       textarea.value = saveUserData.message;
     }
